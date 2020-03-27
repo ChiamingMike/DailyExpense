@@ -19,7 +19,6 @@ public class MSDBQueryContainer extends QueryContainer {
     public String ACCOUNT_BOOK_DELETE_QUERY;
     public String ACCOUNT_BOOK_COLUMNS_QUERY;
     private String connection_url;
-    Map<String, String> hashdata = new HashMap<String, String>();
 
     public MSDBQueryContainer() {
         MSDBConnector msdbConnector = MSDBConnector.getInstance();
@@ -41,13 +40,8 @@ public class MSDBQueryContainer extends QueryContainer {
     public void executeQuery(String query) {
         try (Connection con = DriverManager.getConnection(connection_url); Statement stmt = con.createStatement();) {
             System.out.println("Executing query...");
-            ResultSet result = stmt.executeQuery(query);
-
-            if (query.contains("SELECT")) {
-                while (result.next()) {
-                    hashdata.put(result.getString(1), result.getString(2));
-                }
-            }
+            stmt.executeUpdate(query);
+            System.out.println("Finished normally.");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,8 +49,18 @@ public class MSDBQueryContainer extends QueryContainer {
         }
     }
 
-    public Map<String, String> getExecutionResult(String query) {
-        this.executeQuery(query);
+    public Map<Integer, String> getExecutionResult(String query) {
+        Map<Integer, String> hashdata = new HashMap<Integer, String>();
+        try (Connection con = DriverManager.getConnection(connection_url); Statement stmt = con.createStatement();) {
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                hashdata.put(result.getInt(1), result.getString(2));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Failed to connect database.");
+        }
+
         if (hashdata.isEmpty()) {
             System.out.println("No result.");
         }

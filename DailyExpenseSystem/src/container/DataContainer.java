@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 public class DataContainer {
     private MSDBQueryContainer msdbQueryContainer;
-    Map<String, String> flag = new HashMap<String, String>();
-    Map<String, String> items = new HashMap<String, String>();
+    Map<Integer, String> flag = new HashMap<Integer, String>();
+    Map<Integer, String> items = new HashMap<Integer, String>();
 
     public DataContainer() {
         msdbQueryContainer = new MSDBQueryContainer();
@@ -16,7 +16,7 @@ public class DataContainer {
     private void getExpenseFlag() {
         flag = msdbQueryContainer.getExecutionResult(msdbQueryContainer.FLAG_QUERY);
         System.out.println("+--------------CATEGORY_ID--------------+");
-        for (String key : flag.keySet()) {
+        for (Integer key : flag.keySet()) {
             System.out.println(key + " : " + flag.get(key));
         }
         System.out.println("+---------------------------------------+");
@@ -25,7 +25,7 @@ public class DataContainer {
     private void getFinancialItmes() {
         items = msdbQueryContainer.getExecutionResult(msdbQueryContainer.ITEMS_QUERY);
         System.out.println("+----------------ITEM_ID----------------+");
-        for (String key : items.keySet()) {
+        for (Integer key : items.keySet()) {
             System.out.println(key + " : " + items.get(key));
         }
         System.out.println("+---------------------------------------+");
@@ -68,8 +68,8 @@ public class DataContainer {
             }
             scanner.close();
         }
-        System.out.println(INSERT_QUERY);
-        // msdbQueryContainer.executeQuery();
+        System.out.println("INSERT_QUERY: " + INSERT_QUERY);
+        msdbQueryContainer.executeQuery(INSERT_QUERY);
 
     }
 
@@ -87,7 +87,7 @@ public class DataContainer {
         if (!Arrays.asList(intColumns).contains(column) && value.isEmpty()) {
             checkedValue = "NULL";
         } else if (!Arrays.asList(intColumns).contains(column)) {
-            checkedValue = String.format("\"%s\"", value);
+            checkedValue = String.format("\'%s\'", value);
         } else {
             checkedValue = value;
         }
