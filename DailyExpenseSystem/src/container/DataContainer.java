@@ -78,7 +78,16 @@ public class DataContainer {
     }
 
     public void selectRecord() {
-        System.out.println("Under construction");
+        Scanner scanner = new Scanner(System.in);
+        String SELECT_QUERY = msdbQueryContainer.ACCOUNT_BOOK_SELECT_QUERY;
+        System.out.print(String.format("(Example: 2020-01-01 2020-01-31)\nSelect the records between the date : "));
+        String fromDate = scanner.next();
+        String toDate = scanner.next();
+        SELECT_QUERY = SELECT_QUERY.replace("FROM_DATE", String.format("\'%s\'", fromDate)).replace("TO_DATE",
+                String.format("\'%s\'", toDate));
+        // System.out.println(SELECT_QUERY);
+        msdbQueryContainer.executeQuery(SELECT_QUERY);
+        scanner.close();
     }
 
     public String checkValue(String column, String value) {

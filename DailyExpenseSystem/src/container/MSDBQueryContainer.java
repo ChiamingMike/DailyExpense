@@ -1,10 +1,6 @@
 package container;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.*;
 
 import connector.MSDBConnector;
@@ -39,9 +35,36 @@ public class MSDBQueryContainer extends QueryContainer {
 
     public void executeQuery(String query) {
         try (Connection con = DriverManager.getConnection(connection_url); Statement stmt = con.createStatement();) {
-            System.out.println("Executing query...");
-            stmt.executeUpdate(query);
-            System.out.println("Finished normally.");
+            if (query.contains("INSERT")) {
+                System.out.println("Executing query...");
+                stmt.executeUpdate(query);
+                System.out.println("Finished normally.");
+            } else if (query.contains("SELECT")) {
+                ResultSet result = stmt.executeQuery(query);
+                ResultSetMetaData meta = result.getMetaData();
+
+                ArrayList<String> column = new ArrayList<String>();
+                for (int columnIndex = 1; columnIndex <= meta.getColumnCount(); columnIndex++) {
+                    column.add(meta.getColumnName(columnIndex));
+                }
+                String columns = String.join(",", column);
+
+                ArrayList<String> records = new ArrayList<String>();
+                while (result.next()) {
+                    ArrayList<String> record = new ArrayList<String>();
+                    for (int dataIndex = 1; dataIndex <= meta.getColumnCount(); dataIndex++) {
+                        record.add(result.getString(dataIndex));
+                    }
+                    String oneRecord = String.join(",", record);
+                    records.add(oneRecord);
+
+                }
+                System.out.println(columns.replaceAll(",", "\t"));
+                for (String oneRecord : records) {
+                    System.out.println(oneRecord.replaceAll(",", "\t"));
+
+                }
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
