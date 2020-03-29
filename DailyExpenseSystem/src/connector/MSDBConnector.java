@@ -9,6 +9,7 @@ import loader.ConfPropertyLoader;
 
 public class MSDBConnector implements DBConnector {
     private static final MSDBConnector instance = new MSDBConnector();
+    ConfPropertyLoader loader;
 
     static String CONNECTION_URL;
     static String USER;
@@ -28,14 +29,16 @@ public class MSDBConnector implements DBConnector {
     }
 
     public void setProperty() {
+        System.out.println("Loading authorization infromation from properties...");
+
         try {
-            System.out.println("Loading authorization infromation from properties...");
-            ConfPropertyLoader loader = new ConfPropertyLoader();
+            loader = new ConfPropertyLoader();
             USER = loader.getValue("USER");
             PASSWORD = loader.getValue("PASSWORD");
             SERVER_NAME = loader.getValue("SERVER_NAME");
             PORT = loader.getValue("PORT");
             DB_NAME = loader.getValue("DATABASE_NAME");
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to get infromation from properties.");
@@ -52,7 +55,8 @@ public class MSDBConnector implements DBConnector {
 
         try (Connection con = ds.getConnection();) {
             DatabaseMetaData dbmd = con.getMetaData();
-            System.out.println("Login to " + dbmd.getDatabaseProductName() + " Successfully.");
+            System.out.println(String.format("Login to %s Successfully.", dbmd.getDatabaseProductName()));
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to connect database.");
