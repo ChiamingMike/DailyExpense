@@ -2,8 +2,8 @@ package container;
 
 import java.util.*;
 
-import loader.QueryPropertyLoader;
 import execution.MSDBQueryExecution;
+import loader.QueryPropertyLoader;
 
 public class MSDBDatacontainer {
     private QueryPropertyLoader loader;
@@ -68,6 +68,7 @@ public class MSDBDatacontainer {
             System.out.println("Failed to get default data");
             System.out.println("Please check the default query.");
         }
+
         return (canGetFlag && canGetItems);
     }
 

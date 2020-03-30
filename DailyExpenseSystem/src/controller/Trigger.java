@@ -31,6 +31,7 @@ public class Trigger {
         for (Integer typeNumber : manipulation.keySet()) {
             System.out.println(typeNumber + " : " + manipulation.get(typeNumber));
         }
+
         System.out.println(String.format("(Default will be : %s)\n", DEFAULT_TYPE));
     }
 
@@ -77,9 +78,11 @@ public class Trigger {
                         String rawData = scanner.next();
                         insertRawData.put(columnName, rawData);
                     }
+
                     canRegister = msdbDatacontainer.registerInsertData(insertRawData);
                     retry = this.needRetry(canRegister);
                 }
+
                 break;
 
             case "SELECT":
@@ -90,9 +93,11 @@ public class Trigger {
                         String rawData = scanner.next();
                         selectRawData.put(columnName, rawData);
                     }
+
                     canRegister = msdbDatacontainer.registerSelectData(selectRawData);
                     retry = this.needRetry(canRegister);
                 }
+
                 break;
 
             case "DELETE":
@@ -103,14 +108,17 @@ public class Trigger {
                         String rawData = scanner.next();
                         deleteRawData.put(columnName, rawData);
                     }
+
                     canRegister = msdbDatacontainer.registerInsertData(deleteRawData);
                     retry = this.needRetry(canRegister);
                 }
+
                 break;
 
             default:
                 System.out.println("Unexcepted manipulation type.");
         }
+
         scanner.close();
     }
 

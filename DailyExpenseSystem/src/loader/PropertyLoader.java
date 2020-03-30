@@ -10,6 +10,7 @@ abstract class PropertyLoader {
         try {
             conf = new Properties();
             conf.load(this.getClass().getResourceAsStream(path));
+
         } catch (IOException e) {
             e.printStackTrace();
             System.out.print("Failed to load property.");

@@ -9,14 +9,14 @@ import loader.ConfPropertyLoader;
 
 public class MSDBConnector implements DBConnector {
     private static final MSDBConnector instance = new MSDBConnector();
-    ConfPropertyLoader loader;
+    private ConfPropertyLoader loader;
 
-    static String CONNECTION_URL;
-    static String USER;
-    static String PASSWORD;
-    static String SERVER_NAME;
-    static String PORT;
-    static String DB_NAME;
+    private static String CONNECTION_URL;
+    private static String USER;
+    private static String PASSWORD;
+    private static String SERVER_NAME;
+    private static String PORT;
+    private static String DB_NAME;
 
     private MSDBConnector() {
         this.setProperty();
