@@ -55,6 +55,7 @@ public class Trigger {
 
         String[] tmpColumns = { "from_date", "to_date" };
         boolean retry = true;
+        Map<String, String> RawData = new LinkedHashMap<String, String>();
         boolean canRegister;
 
         switch (manipulationType) {
@@ -67,19 +68,17 @@ public class Trigger {
                 }
 
                 while (retry) {
-                    Map<String, String> insertRawData = new LinkedHashMap<String, String>();
-
                     for (String columnName : columnDescription.keySet()) {
                         if (Arrays.asList(tmpColumns).contains(columnName)) {
                             continue;
                         }
 
                         System.out.print(String.format("Please enter %s : ", columnName));
-                        String rawData = scanner.next();
-                        insertRawData.put(columnName, rawData);
+                        String columnValue = scanner.next();
+                        RawData.put(columnName, columnValue);
                     }
 
-                    canRegister = msdbDatacontainer.registerInsertData(insertRawData);
+                    canRegister = msdbDatacontainer.registerInsertData(RawData);
                     retry = this.needRetry(canRegister);
                 }
 
@@ -87,14 +86,13 @@ public class Trigger {
 
             case "SELECT":
                 while (retry) {
-                    Map<String, String> selectRawData = new LinkedHashMap<String, String>();
                     for (String columnName : tmpColumns) {
                         System.out.print(String.format("Please enter %s : ", columnName));
-                        String rawData = scanner.next();
-                        selectRawData.put(columnName, rawData);
+                        String columnValue = scanner.next();
+                        RawData.put(columnName, columnValue);
                     }
 
-                    canRegister = msdbDatacontainer.registerSelectData(selectRawData);
+                    canRegister = msdbDatacontainer.registerSelectData(RawData);
                     retry = this.needRetry(canRegister);
                 }
 
@@ -102,14 +100,13 @@ public class Trigger {
 
             case "DELETE":
                 while (retry) {
-                    Map<String, String> deleteRawData = new LinkedHashMap<String, String>();
                     for (String columnName : tmpColumns) {
                         System.out.print(String.format("Please enter %s : ", columnName));
-                        String rawData = scanner.next();
-                        deleteRawData.put(columnName, rawData);
+                        String columnValue = scanner.next();
+                        RawData.put(columnName, columnValue);
                     }
 
-                    canRegister = msdbDatacontainer.registerInsertData(deleteRawData);
+                    canRegister = msdbDatacontainer.registerInsertData(RawData);
                     retry = this.needRetry(canRegister);
                 }
 
