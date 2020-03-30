@@ -114,7 +114,7 @@ public class MSDBDatacontainer {
         }
 
         if (!(intIsMatch && dateIsMatch && charIsMatch)) {
-            System.out.println("Invalid data found.");
+            System.out.println("Invalid data found.\n");
         }
 
         return (intIsMatch && dateIsMatch && charIsMatch);

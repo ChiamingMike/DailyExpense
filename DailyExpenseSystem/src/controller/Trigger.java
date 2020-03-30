@@ -31,7 +31,7 @@ public class Trigger {
         for (Integer typeNumber : manipulation.keySet()) {
             System.out.println(typeNumber + " : " + manipulation.get(typeNumber));
         }
-        System.out.println(String.format("(Default will be : %s)", DEFAULT_TYPE));
+        System.out.println(String.format("(Default will be : %s)\n", DEFAULT_TYPE));
     }
 
     public void decideManipulationType() {
@@ -86,7 +86,7 @@ public class Trigger {
                 while (retry) {
                     Map<String, String> selectRawData = new LinkedHashMap<String, String>();
                     for (String columnName : tmpColumns) {
-                        System.out.println(String.format("Please enter %s : ", columnName));
+                        System.out.print(String.format("Please enter %s : ", columnName));
                         String rawData = scanner.next();
                         selectRawData.put(columnName, rawData);
                     }
@@ -99,7 +99,7 @@ public class Trigger {
                 while (retry) {
                     Map<String, String> deleteRawData = new LinkedHashMap<String, String>();
                     for (String columnName : tmpColumns) {
-                        System.out.println(String.format("Please enter %s : ", columnName));
+                        System.out.print(String.format("Please enter %s : ", columnName));
                         String rawData = scanner.next();
                         deleteRawData.put(columnName, rawData);
                     }
