@@ -82,7 +82,6 @@ public class MSDBQueryExecution extends QueryExecution {
             columnDescription.remove("id");
             columnDescription.put("from_date", "datetime");
             columnDescription.put("to_date", "datetime");
-            System.out.println("Completed collect columns description.");
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,63 +1,60 @@
 package controller;
 
 import java.util.*;
+
 import container.MSDBDatacontainer;
 
 public class Trigger {
-    MSDBDatacontainer msdbDatacontainer;
     public static String manipulationType;
+    public String DEFAULT_TYPE = "SELECT";
+    public MSDBDatacontainer msdbDatacontainer;
+    public Scanner scanner = new Scanner(System.in);
+    private Map<Integer, String> manipulation;
 
     public Trigger() {
         msdbDatacontainer = new MSDBDatacontainer();
+        this.initilizeManipulation();
     }
 
     public static void main(String[] args) {
-        Trigger test = new Trigger();
-        String rs = test.decideManipulationType();
-        test.inputData(rs);
+        Trigger trigger = new Trigger();
+        trigger.decideManipulationType();
+        trigger.manipulateDatabase();
     }
 
-    public String decideManipulationType() {
-        String DEFAULT_MANIPULATION = "SELECT";
-        Map<Integer, String> manipulation = new HashMap<Integer, String>();
+    private void initilizeManipulation() {
+        manipulation = new HashMap<Integer, String>();
         manipulation.put(1, "INSERT");
         manipulation.put(2, "SELECT");
         manipulation.put(3, "DELETE");
 
-        for (Integer key : manipulation.keySet()) {
-            System.out.println(key + " : " + manipulation.get(key));
+        for (Integer typeNumber : manipulation.keySet()) {
+            System.out.println(typeNumber + " : " + manipulation.get(typeNumber));
         }
-
-        Scanner scanner = new Scanner(System.in);
-        boolean retry = true;
-
-        while (retry) {
-            try {
-                System.out.println(String.format("(Default will be : %s)", DEFAULT_MANIPULATION));
-                System.out.print("Choose manipulation number: ");
-                Integer key = scanner.nextInt();
-                manipulationType = manipulation.getOrDefault(key, DEFAULT_MANIPULATION);
-                retry = false;
-
-                if (!manipulation.keySet().contains(key) && manipulationType.equals(manipulationType)) {
-                    System.out.println("Using default manipulation type.");
-                }
-
-            } catch (Exception e) {
-                System.out.println("Please enter a manipulation number.");
-            }
-        }
-        // scanner.close();
-        return manipulationType;
+        System.out.println(String.format("(Default will be : %s)", DEFAULT_TYPE));
     }
 
-    public void inputData(String manipulationType) {
+    public void decideManipulationType() {
+        try {
+            System.out.print("Choose manipulation number: ");
+            Integer typeNumber = scanner.nextInt();
+            manipulationType = manipulation.getOrDefault(typeNumber, DEFAULT_TYPE);
+
+            if (!manipulation.keySet().contains(typeNumber)) {
+                System.out.println("Using default manipulation type.");
+            }
+
+        } catch (Exception e) {
+            manipulationType = "ERROR";
+        }
+    }
+
+    public void manipulateDatabase() {
         msdbDatacontainer.registerColumnDescription();
 
         String[] tmpColumns = { "from_date", "to_date" };
         boolean retry = true;
         boolean canRegister;
-        Scanner scanner = new Scanner(System.in);
 
         switch (manipulationType) {
             case "INSERT":
@@ -83,7 +80,6 @@ public class Trigger {
                     canRegister = msdbDatacontainer.registerInsertData(insertRawData);
                     retry = this.needRetry(canRegister);
                 }
-
                 break;
 
             case "SELECT":
@@ -93,7 +89,6 @@ public class Trigger {
                         System.out.println(String.format("Please enter %s : ", columnName));
                         String rawData = scanner.next();
                         selectRawData.put(columnName, rawData);
-
                     }
                     canRegister = msdbDatacontainer.registerSelectData(selectRawData);
                     retry = this.needRetry(canRegister);
@@ -107,7 +102,6 @@ public class Trigger {
                         System.out.println(String.format("Please enter %s : ", columnName));
                         String rawData = scanner.next();
                         deleteRawData.put(columnName, rawData);
-
                     }
                     canRegister = msdbDatacontainer.registerInsertData(deleteRawData);
                     retry = this.needRetry(canRegister);
@@ -120,14 +114,12 @@ public class Trigger {
         scanner.close();
     }
 
-    private boolean needRetry(boolean status) {
-        if (status) {
+    private boolean needRetry(boolean canRegisterData) {
+        if (canRegisterData) {
             return false;
-
         } else {
             return true;
         }
-
     }
 
 }

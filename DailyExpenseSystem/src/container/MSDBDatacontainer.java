@@ -90,7 +90,7 @@ public class MSDBDatacontainer {
 
     private boolean isValidValue(Map<String, String> rawData) {
         String intReg = "^\\d+$";
-        String dateReg = "^\\d{4}-\\d{2}-\\d{2}$";
+        String dateReg = "^\\d{4}-\\d{1,2}-\\d{1,2}";
         boolean intIsMatch = true;
         boolean charIsMatch = true;
         boolean dateIsMatch = true;
@@ -109,8 +109,12 @@ public class MSDBDatacontainer {
                 dateIsMatch = aRawData.getValue().matches(dateReg);
 
             } else if (columnDescription.get(aRawData.getKey()).contains("char")) {
-                dateIsMatch = aRawData.getValue().length() <= 20;
+                charIsMatch = aRawData.getValue().length() <= 20;
             }
+        }
+
+        if (!(intIsMatch && dateIsMatch && charIsMatch)) {
+            System.out.println("Invalid data found.");
         }
 
         return (intIsMatch && dateIsMatch && charIsMatch);

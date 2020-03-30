@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 abstract class PropertyLoader {
-    private Properties conf = null;
+    protected Properties conf = null;
 
     protected PropertyLoader(String path) {
         try {
